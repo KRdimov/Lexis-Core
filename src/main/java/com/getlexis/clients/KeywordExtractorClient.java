@@ -1,4 +1,4 @@
-package com.getlexis.extractor;
+package com.getlexis.clients;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -9,11 +9,11 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
-public class KeywordExtractor {
+public class KeywordExtractorClient {
     private Client client;
     private WebTarget target;
 
-    public KeywordExtractor(String targetPath) {
+    public KeywordExtractorClient(String targetPath) {
         client = ClientBuilder.newClient();
         target = client.target(targetPath);
     }
@@ -24,7 +24,7 @@ public class KeywordExtractor {
         formData.add("wordnum", Integer.toString(keywordNum));
 
         return target.request(MediaType.APPLICATION_JSON_TYPE)
-                .header("X-Mashape-Key", "Wjhgehr8UlmshKraL8WKS7syXeSFp1XwkTVjsn0jnhL6sDwE6K")
+                .header("X-Mashape-Key", "")
                 .accept(MediaType.APPLICATION_JSON).post(Entity.form(formData));
     }
 }

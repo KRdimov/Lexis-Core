@@ -1,5 +1,6 @@
 package com.getlexis.resources;
 
+import com.getlexis.clients.ElasticSearchClient;
 import com.getlexis.json.JsonStructure;
 import com.google.gson.Gson;
 
@@ -12,13 +13,13 @@ import java.util.List;
 
 @Path("/templates")
 public class TemplateResource {
-    private List<String> dummyTemplates = new ArrayList<String>(){{
+    private static List<String> dummyTemplates = new ArrayList<String>(){{
         add("Hi, this is me!");
         add("I am sorry for your message");
         add("Dumb customer!!!");
     }};
 
-    @POST
+    @GET
     @Path("/email")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
@@ -34,11 +35,15 @@ public class TemplateResource {
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getTemplates() {
-    	JsonStructure json = new JsonStructure();
-    	json.templates = dummyTemplates.toArray(new String[0]);
+//    	JsonStructure json = new JsonStructure();
+//    	json.templates = dummyTemplates.toArray(new String[0]);
+//    	
+//    	String output = produceJsonOutput(json);
     	
-    	String output = produceJsonOutput(json);
-    	return Response.ok(output,MediaType.APPLICATION_JSON).build();
+    	ElasticSearchClient elasticSearch = new ElasticSearchClient();
+    	
+    	//return Response.ok(output,MediaType.APPLICATION_JSON).build();
+    	return elasticSearch.getAllTemplates();
     }
     
     private String produceJsonOutput(JsonStructure json) {
