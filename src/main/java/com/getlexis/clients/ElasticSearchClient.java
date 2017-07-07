@@ -7,6 +7,9 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.getlexis.types.Template;
+import com.google.gson.Gson;
+
 public class ElasticSearchClient {
     private Client client;
     private WebTarget target;
@@ -73,20 +76,33 @@ public class ElasticSearchClient {
 	}
 
 	public void updateTemplate(int id, String newTemplate) {
-		String jsonTemplate = "{ \"doc\": { \"template\":\"" + newTemplate + "\"}}";
+		String jsonTemplate = escapeJsonData(newTemplate);
+		String validatedJsonTemplate = "{ \"doc\": " + jsonTemplate + "}";
 		
 		target = client.target(BASE_URL + INDEX_TYPE + "/" + id + "/_update");
-		target.request(MediaType.APPLICATION_JSON_TYPE)
-                .accept(MediaType.APPLICATION_JSON).post(Entity.json(jsonTemplate));
+		Response response = target.request(MediaType.APPLICATION_JSON_TYPE)
+                .accept(MediaType.APPLICATION_JSON).post(Entity.json(validatedJsonTemplate));
+		
+		System.out.println(response.getStatus());
 	}
 
 	public void createTemplate(String template) {
 		target = client.target(BASE_URL + INDEX_TYPE + "/" + id);
 		id++;
 		
-		String jsonTemplate = "{ \"template\":\"" + template + "\"}";
-		target.request(MediaType.APPLICATION_JSON_TYPE)
+	    String jsonTemplate = escapeJsonData(template);
+	    
+	    target.request(MediaType.APPLICATION_JSON_TYPE)
                 .accept(MediaType.APPLICATION_JSON).put(Entity.json(jsonTemplate));
+	}
+
+	private String escapeJsonData(String templateContent) {
+		Template template = new Template();
+		template.setTemplate(templateContent);
+		
+		Gson gson = new Gson();
+	    String json = gson.toJson(template);
+		return json;
 	}
 
 	public void deleteTemplate(int id) {
