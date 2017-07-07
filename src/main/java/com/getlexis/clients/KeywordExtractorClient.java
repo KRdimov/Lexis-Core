@@ -24,7 +24,7 @@ public class KeywordExtractorClient {
         formData.add("wordnum", Integer.toString(keywordNum));
 
         return target.request(MediaType.APPLICATION_JSON_TYPE)
-                .header("X-Mashape-Key", "")
+                .header("X-Mashape-Key", "OiQTLJXSOWmshLMspPJ9GO19U7Lep1SvIQpjsnX82oHBEeBPZW")
                 .accept(MediaType.APPLICATION_JSON).post(Entity.form(formData));
     }
 }
